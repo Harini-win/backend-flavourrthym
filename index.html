@@ -55,6 +55,21 @@
     <script>
         let isLoginForm = true;
         const API_URL = 'https://backend-flavourrthym.onrender.com';
+        fetch('https://backend-flavourrthym.onrender.com/api/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ email, password })
+})
+.then(res => res.json())
+.then(data => {
+  console.log(data);
+})
+.catch(err => {
+  console.error('Fetch error:', err);
+});
+
 
         function toggleForm() {
             const formTitle = document.getElementById('formTitle');
