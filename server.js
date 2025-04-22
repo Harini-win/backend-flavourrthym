@@ -101,7 +101,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-app.get('/api/front.html', (req, res) => {
+app.get('api/front.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'front.html'));
 });
 app.get('/trial.html', (req, res) => {
