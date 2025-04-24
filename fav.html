@@ -119,8 +119,11 @@
             } else {
                 favouritesContainer.innerHTML = "<p class='text-center text-gray-600 text-lg'>No favourite recipes saved yet.</p>";
             }
+       })
+        .catch(error => {
+            console.error('Failed to load favorites:', error);
         });
-
+    });
 
 
         
