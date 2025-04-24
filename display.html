@@ -442,26 +442,34 @@ window.onload = loadRecipe;
     }
     
     function addToFavourites() {
+    const userId = localStorage.getItem("userId");
+
     const recipe = {
+        userId,
+        recipeId: currentRecipeId,
         title: document.getElementById("recipeTitle").textContent,
         image: document.getElementById("recipeImage").src,
-        id: currentRecipeId
     };
 
-    fetch('/api/favourites', {
+    fetch('/api/favorites', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(recipe)
     })
-    .then(response => response.json())
-    .then(data => {
-        alert("Recipe added to favourites!");
+    .then(response => {
+        if (response.status === 409) {
+            alert("Already in favourites!");
+        } else if (response.ok) {
+            alert("Recipe added to favourites!");
+        } else {
+            throw new Error('Something went wrong');
+        }
     })
     .catch(error => {
-        console.error('Error adding to favourites:', error);
-        alert("Failed to add to favourites.");
+        console.error('Error:', error);
+        alert("Error adding to favourites.");
     });
 }
 
