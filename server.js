@@ -46,6 +46,47 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
+const favoriteSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  recipeId: {
+    type: String,
+    required: true,
+  },
+});
+
+const Favorite = mongoose.model('Favorite', favoriteSchema);
+
+app.post('/api/favorites', async (req, res) => {
+  const { userId, recipeId } = req.body;
+  try {
+    const existing = await Favorite.findOne({ userId, recipeId });
+    if (existing) {
+      return res.status(409).json({ message: 'Already favorited' });
+    }
+
+    const fav = new Favorite({ userId, recipeId });
+    await fav.save();
+    res.status(201).json({ message: 'Added to favorites' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/favorites/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const favorites = await Favorite.find({ userId });
+    res.json(favorites);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 app.get('/api', (req, res) => {
   res.json({ message: 'API is working' });
