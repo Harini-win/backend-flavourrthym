@@ -83,13 +83,23 @@
         }, 1000);
     }
     document.addEventListener("DOMContentLoaded", function () {
-    const favouritesContainer = document.getElementById("favouritesContainer");
-    const savedRecipes = JSON.parse(localStorage.getItem("favourites")) || [];
+    const userId = localStorage.getItem('userId');
+      if (!userId) {
+        alert('User not logged in');
+        window.location.href = '/index.html';
+        return;
+      }
 
-    if (savedRecipes.length > 0) {
+      fetch(`/api/favorites/${userId}`)
+        .then(res => res.json())
+        .then(favorites => {
+             const favouritesContainer = document.getElementById("favouritesContainer");
+    
+
+    if (favorites.length > 0) {
         favouritesContainer.innerHTML = ""; 
 
-        savedRecipes.forEach((recipe, index) => {
+        favorites.forEach(recipe => {
             const recipeCard = document.createElement("div");
             recipeCard.className = "bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col items-center";
 
