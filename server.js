@@ -56,19 +56,28 @@ const favoriteSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  title: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: String,
+    required: true
+  },
 });
+
 
 const Favorite = mongoose.model('Favorite', favoriteSchema);
 
 app.post('/api/favorites', async (req, res) => {
-  const { userId, recipeId } = req.body;
+  const { userId, recipeId, title, image } = req.body;
   try {
     const existing = await Favorite.findOne({ userId, recipeId });
     if (existing) {
       return res.status(409).json({ message: 'Already favorited' });
     }
 
-    const fav = new Favorite({ userId, recipeId });
+    const fav = new Favorite({ userId, recipeId, title, image });
     await fav.save();
     res.status(201).json({ message: 'Added to favorites' });
   } catch (err) {
@@ -76,6 +85,7 @@ app.post('/api/favorites', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 app.get('/api/favorites/:userId', async (req, res) => {
   try {
